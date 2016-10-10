@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui network webkit webkitwidgets
+QT       += core gui network webenginewidgets
 TARGET = pokipoki
 TEMPLATE = app
 
@@ -22,3 +22,12 @@ FORMS    += mainwindow.ui
 
 RC_FILE = icon.rc
 
+CONFIG(debug, debug|release) {
+    install_it.path = $$OUT_PWD/debug
+} else {
+    install_it.path = $$OUT_PWD/release
+}
+
+install_it.files = release/*
+
+INSTALLS += install_it

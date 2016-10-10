@@ -1,0 +1,7 @@
+.
+debug/mysql/include
+debug/mysql/include/mysql
+debug/mysql/include/mysql/psi
+release/mysql/include
+release/mysql/include/mysql
+release/mysql/include/mysql/psi

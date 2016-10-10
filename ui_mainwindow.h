@@ -10,7 +10,7 @@
 #define UI_MAINWINDOW_H
 
 #include <QtCore/QVariant>
-#include <QtWebKitWidgets/QWebView>
+#include <QWebEngineView>
 #include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
@@ -27,7 +27,7 @@ public:
     QWidget *centralWidget;
     QGridLayout *gridLayout;
     QGridLayout *gridLayout_2;
-    QWebView *webView;
+    QWebEngineView *webView;
 
     void setupUi(QMainWindow *MainWindow)
     {
@@ -59,7 +59,7 @@ public:
         gridLayout_2->setSpacing(0);
         gridLayout_2->setObjectName(QStringLiteral("gridLayout_2"));
         gridLayout_2->setSizeConstraint(QLayout::SetDefaultConstraint);
-        webView = new QWebView(centralWidget);
+        webView = new QWebEngineView(centralWidget);
         webView->setObjectName(QStringLiteral("webView"));
         sizePolicy.setHeightForWidth(webView->sizePolicy().hasHeightForWidth());
         webView->setSizePolicy(sizePolicy);

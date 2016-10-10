@@ -10,18 +10,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
 
-    QString result = Functions::readFile(QCoreApplication::applicationDirPath()+"\\app\\pokipoki.json");
+    QString result = Functions::readFile(QCoreApplication::applicationDirPath()+"/app/pokipoki.json");
     json = QtJson::Json::parse(result).toMap();
-
-
-
 
     if(json["contextMenu"].toString()=="true" || json["debugger"].toString()=="true")
         ui->webView->setContextMenuPolicy(Qt::DefaultContextMenu);
-
-    if (json["debugger"].toString()=="true"){
-        ui->webView->page()->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
-    }
 
     setWindowTitle(json["title"].toString());
 
@@ -32,28 +25,15 @@ MainWindow::MainWindow(QWidget *parent) :
     }
 
 
-    ui->webView->page()->settings()->setAttribute(QWebSettings::LocalContentCanAccessRemoteUrls,true);
-    ui->webView->page()->settings()->setAttribute(QWebSettings::LocalContentCanAccessFileUrls,true);
-    ui->webView->page()->settings()->setAttribute(QWebSettings::LocalStorageEnabled,true);
-    ui->webView->page()->settings()->setAttribute(QWebSettings::AutoLoadImages,true);
-    ui->webView->page()->settings()->setAttribute(QWebSettings::PrivateBrowsingEnabled,true);
-    ui->webView->page()->settings()->setMaximumPagesInCache(0);
-    ui->webView->page()->settings()->clearMemoryCaches();
+    ui->webView->page()->settings()->setAttribute(QWebEngineSettings::LocalContentCanAccessRemoteUrls,true);
+    ui->webView->page()->settings()->setAttribute(QWebEngineSettings::LocalContentCanAccessFileUrls,true);
+    ui->webView->page()->settings()->setAttribute(QWebEngineSettings::LocalStorageEnabled,true);
+    ui->webView->page()->settings()->setAttribute(QWebEngineSettings::AutoLoadImages,true);
 
-    QWebSettings::globalSettings()->setMaximumPagesInCache(0);
-    QWebSettings::globalSettings()->setObjectCacheCapacities(0, 0, 0);
-
-    QWebSettings::globalSettings()->setAttribute(QWebSettings::LocalContentCanAccessRemoteUrls,true);
-    QWebSettings::globalSettings()->setAttribute(QWebSettings::LocalContentCanAccessFileUrls,true);
-    QWebSettings::globalSettings()->setAttribute(QWebSettings::LocalStorageEnabled,true);
-    QWebSettings::globalSettings()->setAttribute(QWebSettings::AutoLoadImages,true);
-    QWebSettings::globalSettings()->setAttribute(QWebSettings::PrivateBrowsingEnabled,true);
-    QWebSettings::globalSettings()->setMaximumPagesInCache(0);
-    QWebSettings::globalSettings()->clearMemoryCaches();
-
-
-
-
+    QWebEngineSettings::globalSettings()->setAttribute(QWebEngineSettings::LocalContentCanAccessRemoteUrls,true);
+    QWebEngineSettings::globalSettings()->setAttribute(QWebEngineSettings::LocalContentCanAccessFileUrls,true);
+    QWebEngineSettings::globalSettings()->setAttribute(QWebEngineSettings::LocalStorageEnabled,true);
+    QWebEngineSettings::globalSettings()->setAttribute(QWebEngineSettings::AutoLoadImages,true);
 
     move(QPoint(json["x"].toInt(),json["y"].toInt()));
 
@@ -88,6 +68,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QString program = "\""+QCoreApplication::applicationDirPath()+"\\lighttpd\\poki_http.exe\" -f \""+QCoreApplication::applicationDirPath().replace("/","\\")+"\\lighttpd\\conf\\lighttpd.conf\"";
 
+
     qDebug(program.toLatin1());
     /*QStringList arguments;
     arguments << "-f" << "\""+QCoreApplication::applicationDirPath()+"\\lighttpd\\conf\\lighttpd.conf\"";*/
@@ -99,12 +80,19 @@ MainWindow::MainWindow(QWidget *parent) :
     QString StdOut = http->readAllStandardOutput(); //Reads standard output
     QString StdError = http->readAllStandardError(); //Reads standard error
 
+/*
+    QString StdOut = "";
+    QString StdError = "";
+*/
     qDebug("\n Printing the standard output..........\n");
     qDebug(StdOut.toLatin1());
     qDebug("\n Printing the standard error..........\n");
     qDebug(StdError.toLatin1());
 
-
+    QString jsontxt = ""+json["title"].toString();
+    QString pathtxt = ""+QCoreApplication::applicationDirPath()+"/app/pokipoki.json";
+    qDebug(jsontxt.toLatin1());
+    qDebug(pathtxt.toLatin1());
 
     program = "\""+QCoreApplication::applicationDirPath()+"\\mysql\\bin\\poki_mysqld.exe\"";
     if(QFile::exists(program)){
@@ -117,27 +105,18 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->webView->load(QUrl("http://127.0.0.1:"+json["port"].toString()));
 
-
-
-
-
-
-
-
-
-    connect(ui->webView->page()->mainFrame(), SIGNAL(javaScriptWindowObjectCleared()), this, SLOT(mainFrame_javaScriptWindowObjectCleared()));
+  //  connect(ui->webView->page(), SIGNAL(javaScriptWindowObjectCleared()), this, SLOT(mainFrame_javaScriptWindowObjectCleared()));
 
     connect(qApp,SIGNAL(aboutToQuit()), this, SLOT(applicationClosed()));
 }
 
 void MainWindow::mainFrame_javaScriptWindowObjectCleared(){
-    ui->webView->page()->mainFrame()->addToJavaScriptWindowObject("pokipoki", this);
+  //  ui->webView->page()->addToJavaScriptWindowObject("pokipoki", this);
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
-
 }
 /*
 void MainWindow::closeEvent (QCloseEvent *event)
@@ -152,8 +131,8 @@ void MainWindow::applicationClosed(){
    // mysql->kill();
     //delete mysql;
 
-    http->close();
-    delete http;
+   // http->close();
+  //  delete http;
     Functions::pkill("poki_http");
 }
 
@@ -226,7 +205,7 @@ QString MainWindow::getInfo(QString key){
             return  QCoreApplication::applicationVersion();
         break;
         case 3:
-        return Functions::getOs();
+            return Functions::getOs();
         break;
     }
 }

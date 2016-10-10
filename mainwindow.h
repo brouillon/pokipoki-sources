@@ -3,8 +3,8 @@
 
 #include <QMainWindow>
 #include <QProcess>
-#include <QWebView>
-#include <QWebFrame>
+#include <QWebEngineView>
+#include <QWebEngineSettings>
 #include <QSystemTrayIcon>
 #include <QVBoxLayout>
 #include <QMenu>
